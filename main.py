@@ -17,11 +17,21 @@ class Game:
                 self.screen.blit(self.load.grass, (x * 100, y * 100))
 
     def draw_elements_on_the_screen(self):
-        self.screen.blit(self.load.player, (100, 100))
+        self.screen.blit(self.load.player, self.player_position)
         self.screen.blit(self.load.castle, (0, 30))
         self.screen.blit(self.load.castle, (0, 135))
         self.screen.blit(self.load.castle, (0, 240))
         self.screen.blit(self.load.castle, (0, 345))
+
+    def move_player(self):
+        if self.keys[0]:
+            self.player_position[1] -= 5
+        elif self.keys[2]:
+            self.player_position[1] += 5
+        if self.keys[1]:
+            self.player_position[0] -= 5
+        elif self.keys[3]:
+            self.player_position[0] += 5
 
     def game_loop(self):
         while 1:
@@ -42,6 +52,27 @@ class Game:
                     # if it is quit the game
                     pygame.quit()
                     exit(0)
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_w:
+                        self.keys[0] = True
+                    elif event.key == pygame.K_a:
+                        self.keys[1] = True
+                    elif event.key == pygame.K_s:
+                        self.keys[2] = True
+                    elif event.key == pygame.K_d:
+                        self.keys[3] = True
+
+                if event.type == pygame.KEYUP:
+                    if event.key == pygame.K_w:
+                        self.keys[0] = False
+                    elif event.key == pygame.K_a:
+                        self.keys[1] = False
+                    elif event.key == pygame.K_s:
+                        self.keys[2] = False
+                    elif event.key == pygame.K_d:
+                        self.keys[3] = False
+            self.move_player()
 
 
 if __name__ == "__main__":
