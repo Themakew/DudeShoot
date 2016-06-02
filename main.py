@@ -1,5 +1,6 @@
-import pygame
 from load import LoadResources
+import pygame
+import math
 
 
 class Game:
@@ -17,7 +18,6 @@ class Game:
                 self.screen.blit(self.load.grass, (x * 100, y * 100))
 
     def draw_elements_on_the_screen(self):
-        self.screen.blit(self.load.player, self.player_position)
         self.screen.blit(self.load.castle, (0, 30))
         self.screen.blit(self.load.castle, (0, 135))
         self.screen.blit(self.load.castle, (0, 240))
@@ -33,6 +33,19 @@ class Game:
         elif self.keys[3]:
             self.player_position[0] += 5
 
+    def angle_between_mouse_and_Player(self):
+        mouse_position = pygame.mouse.get_pos()
+        angle = math.atan2(mouse_position[1] - (self.player_position[1] + 32),
+                           mouse_position[0] - (self.player_position[0] + 26))
+        return angle
+
+    def define_rotation_and_position_of_the_player(self, angle):
+        player_rotation_number = pygame.transform.rotate(self.load.player, 360 - angle * 57.29)
+        playerpos1 = (self.player_position[0] - player_rotation_number.get_rect().width / 2,
+                      self.player_position[1] - player_rotation_number.get_rect().height / 2)
+
+        self.screen.blit(player_rotation_number, playerpos1)
+
     def game_loop(self):
         while 1:
             # 5 - clear the screen before drawing it again
@@ -41,6 +54,7 @@ class Game:
             # 6 - draw the screen elements
             self.draw_background()
             self.draw_elements_on_the_screen()
+            self.define_rotation_and_position_of_the_player(self.angle_between_mouse_and_Player())
 
             # 7 - update the screen
             pygame.display.flip()
