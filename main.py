@@ -11,7 +11,6 @@ GAMEPLAY_RUNNING_TIME = 90000
 class Game:
     load = LoadResources()
 
-    pygame.init()
     pygame.display.set_caption("DudeShoot")
     width, height = 640, 480
     screen = pygame.display.set_mode((width, height))
@@ -29,6 +28,14 @@ class Game:
     accuracy = 0
 
     bad_rect = pygame.Rect(load.bad_guy_image.get_rect())
+
+    def load_audio(self):
+        self.load.hit.set_volume(0.05)
+        self.load.enemy.set_volume(0.05)
+        self.load.shoot.set_volume(0.05)
+        pygame.mixer.music.load('resources/audio/moonlight.wav')
+        pygame.mixer.music.play(-1, 0.0)
+        pygame.mixer.music.set_volume(0.25)
 
     def draw_background(self):
         self.screen.blit(self.load.grass, (0, 0))
@@ -81,10 +88,9 @@ class Game:
     def draw_clock(self):
         font = pygame.font.Font(None, 24)
         survived_text = font.render(
-            str((GAMEPLAY_RUNNING_TIME - pygame.time.get_ticks()) / 60000) + ":" +
-            str((GAMEPLAY_RUNNING_TIME - pygame.time.get_ticks()) / 1000 % 60).zfill(2),
+            str((GAMEPLAY_RUNNING_TIME - pygame.time.get_ticks()) / 10000),
             True,
-            (0, 0, 0))
+            (255, 255, 255))
         text_rect = survived_text.get_rect()
         text_rect.topright = [635, 5]
         self.screen.blit(survived_text, text_rect)
@@ -119,6 +125,7 @@ class Game:
 
     def arrow_movement(self, event):
         if event == pygame.MOUSEBUTTONDOWN:
+            self.load.shoot.play()
             mouse_position = pygame.mouse.get_pos()
             self.shoot_accuracy[1] += 1
             self.arrows.append([math.atan2(mouse_position[1] - (self.player_pos_one[1] + 32),
@@ -129,6 +136,7 @@ class Game:
         self.bad_rect.top = enemie[1]
         self.bad_rect.left = enemie[0]
         if self.bad_rect.left < 64:
+            self.load.hit.play()
             self.health_value -= random.randint(5, 20)
             self.enemies.pop(index)
 
@@ -139,6 +147,7 @@ class Game:
             bull_rect.left = bullet[1]
             bull_rect.top = bullet[2]
             if self.bad_rect.colliderect(bull_rect):
+                self.load.enemy.play()
                 self.shoot_accuracy[0] += 1
                 self.enemies.pop(index)
                 self.arrows.pop(index_one)
@@ -186,12 +195,14 @@ class Game:
             pygame.display.flip()
 
     def game_loop(self):
+        self.load_audio()
+
         while self.running:
             self.bad_timer -= 1
-            # 5 - clear the screen before drawing it again
+
+            # clear the screen before drawing it again
             self.screen.fill(0)
 
-            # 6 - draw the screen elements
             self.draw_background()
             self.draw_elements_on_the_screen()
             self.draw_arrows()
@@ -200,10 +211,10 @@ class Game:
             self.draw_health_bar()
             self.player_movement(self.angle_between_mouse_and_Player())
 
-            # 7 - update the screen
+            # update the screen
             pygame.display.flip()
 
-            # 8 - loop through the events
+            # loop through the events
             for event in pygame.event.get():
                 self.check_if_player_exit(event)
 
