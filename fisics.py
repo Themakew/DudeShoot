@@ -35,7 +35,7 @@ class GameFisics:
             bullet[2] += vely
 
             # check if the bullet in on the screen
-            if bullet[1] <- 64 or bullet[1] > 640 or bullet[2] <- 64 or bullet[2] > 480:
+            if bullet[1] < - 64 or bullet[1] > 640 or bullet[2] < - 64 or bullet[2] > 480:
                 self.arrows.pop(index)
             index += 1
 
@@ -55,7 +55,7 @@ class GameFisics:
 
         index = 0
         for enemie in self.enemies:
-            if enemie[0] <- 64:
+            if enemie[0] < - 64:
                 self.enemies.pop(index)
             enemie[0] -= 7
             self.enemies_attack(enemie, index)
@@ -155,18 +155,18 @@ class GameFisics:
     def display_win_or_lose(self):
         if self.exit_code == 0:
             font = pygame.font.Font(None, 24)
-            text = font.render("Accuracy: " + str(self.accuracy) + "%", True, (0, 0, 0))
+            text = font.render("Accuracy: " + str(self.accuracy) + "%", True, (255, 255, 255))
             text_rect = text.get_rect()
-            text_rect.centerx = self.load.screen.get_rect().centerx
+            text_rect.centerx = self.load.screen.get_rect().centerx + 24
             text_rect.centery = self.load.screen.get_rect().centery + 24
             self.load.screen.blit(self.load.gameover, (0, 0))
             self.load.screen.blit(text, text_rect)
         else:
             pygame.font.init()
             font = pygame.font.Font(None, 24)
-            text = font.render("Accuracy: " + str(self.accuracy) + "%", True, (0, 0, 0))
+            text = font.render("Accuracy: " + str(self.accuracy) + "%", True, (255, 255, 255))
             text_rect = text.get_rect()
-            text_rect.centerx = self.load.screen.get_rect().centerx
+            text_rect.centerx = self.load.screen.get_rect().centerx + 24
             text_rect.centery = self.load.screen.get_rect().centery + 24
             self.load.screen.blit(self.load.you_win, (0, 0))
             self.load.screen.blit(text, text_rect)

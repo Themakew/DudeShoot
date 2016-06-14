@@ -56,8 +56,3 @@ class Game:
             self.fisics.move_player()
             self.fisics.check_if_player_win_or_lose()
         self.fisics.display_win_or_lose()
-
-
-if __name__ == "__main__":
-    main = Game()
-    main.game_loop()
