@@ -2,9 +2,9 @@
 This is a cool game in python with PyGame framework.
 
 
-Install all the project dependencies:
+Install PyGame:
 ```bash
-  $ pip install -r requirements.txt
+  $ pip install hg+http://bitbucket.org/pygame/pygame
 ```
 
 Command to run:
